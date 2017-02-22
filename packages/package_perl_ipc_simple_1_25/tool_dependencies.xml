@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="perl" version="5.18.1">
+        <repository name="package_perl_5_18" owner="iuc" prior_installation_required="True" />
+    </package>
+    <package name="perl-ipc-simple" version="1.25">
+        <install version="1.0">
+            <actions>
+                <action type="setup_perl_environment">
+                    <repository name="package_perl_5_18" owner="iuc">
+                        <package name="perl" version="5.18.1" />
+                    </repository>
+                    <package sha256sum="f1b6aa1dfab886e8e4ea825f46a1cbb26038ef3e727fef5d84444aa8035a4d3b">
+                        https://depot.galaxyproject.org/software/perl-ipc-system-simple/perl-ipc-system-simple_1.25_src_all.tar.gz
+                    </package>
+                </action>
+            </actions>
+        </install>
+        <readme>
+            A Perl package for run commands simply, with detailed diagnostics.
+            http://search.cpan.org/~pjf/IPC-System-Simple-1.25
+        </readme>
+    </package>
+</tool_dependency>

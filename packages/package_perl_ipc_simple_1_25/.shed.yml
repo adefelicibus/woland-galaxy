@@ -1,0 +1,13 @@
+categories:
+  - Tool Dependency Packages
+description: Contains a tool dependency definition that downloads version
+  1.25 of IPC System Simple, a Perl package for run commands simply, with detailed diagnostics.
+long_description: |
+  IPC::System::Simple: a Perl package for run commands simply, with detailed diagnostics.
+
+  http://search.cpan.org/~pjf/IPC-System-Simple-1.25
+name: package_perl_ipc_simple_1_25
+owner: adefelicibus
+homepage_url: http://search.cpan.org/~pjf/IPC-System-Simple-1.25
+remote_repository_url: 
+type: tool_dependency_definition
