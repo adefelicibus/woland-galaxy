@@ -1,0 +1,64 @@
+<tool id="woland" name="Woland" version="0.1.0">
+    <description>Point Mutation Profiles from Resequencing Genomics Data</description>
+    <requirements>
+        <requirement type="package" version="1.25">perl-ipc-system-simple</requirement>
+        <requirement type="package" version="5.22.2.1">perl</requirement>
+    </requirements>
+    <stdio>
+        <exit_code range="1:" />
+    </stdio>
+    <command><![CDATA[
+        perl $__tool_directory__/woland-batch.pl -i "$input1" -o results/
+    ]]></command>
+    <inputs>
+        <param type="data" name="input1" format="txt" />
+    </inputs>
+    <outputs>
+        <data name="output1" format="data" from_work_dir="/results" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input1" value="input-table-ecoli_6groups.txt"/>
+            <output name="output1" file="/results"/>
+        </test>
+    </tests>
+    <help><![CDATA[
+        usage: woland-batch.pl --genome-version|-g --hotspot-window-length|-w
+--chromosome-length-profile|-c --input-table|-i [--help|-h] [--threads|-t]
+
+WOLAND is a multiplatform tool to analyze point mutation patterns using
+resequencing SNV data.		Use woland-batch to run multiple samples as in
+<input-table> using woland-anno.pl and build a grouped report using
+woland-report.pl. For more details please read README
+
+required named arguments:
+  --genome-version, -g GENOME-VERSION                            String for genome version for genome and annotation files
+                                                                   in genomes/ folder
+  --hotspot-window-length, -w HOTSPOT-WINDOW-LENGTH              Natural number for hotspot window-length
+                                                                   Default: 1000
+  --chromosome-length-profile, -c CHROMOSOME-LENGTH-PROFILE      Tab-delimited file with chr names in the 1st column and
+                                                                   target sequenced length in the 2nd column
+  --input-table, -i INPUT-TABLE                                  Tab-delimited file with samples in the 1st column and
+                                                                   groups in the 2nd column
+
+optional named arguments:
+  --help, -h               ? show this help message and exit
+  --threads, -t THREADS    ? Set a number for the maximum number of threads
+                               Default: 30
+
+If you used Woland in your research, we would appreciate your citation:
+	de Souza TA, Defelicibus A, Menck CF
+
+    ]]></help>
+    <citations>
+        <citation type="bibtex">
+@misc{githubwoland,
+  author = {LastTODO, FirstTODO},
+  year = {TODO},
+  title = {woland},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  url = {https://github.com/tiagoantonio/woland},
+}</citation>
+    </citations>
+</tool>
