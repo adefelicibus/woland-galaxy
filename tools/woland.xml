@@ -1,8 +1,25 @@
 <tool id="woland" name="Woland" version="0.1.0">
     <description>Point Mutation Profiles from Resequencing Genomics Data</description>
     <requirements>
-        <requirement type="package" version="1.25">perl-ipc-system-simple</requirement>
         <requirement type="package" version="5.22.2.1">perl</requirement>
+        <requirement type="package" version="1.25">perl-ipc-system-simple</requirement>
+        <requirement type="package" version="0.94">perl-ipc-run</requirement>
+        <requirement type="package" version="1.17">perl-parallel-forkmanager</requirement>
+        <requirement type="package" version="2016060801">perl-regexp-common</requirement>
+        <requirement type="package" version="2.03">perl-text-balanced</requirement>
+        <requirement type="package" version="2013.0523">perl-text-wrap</requirement>
+        <requirement type="package" version="0.34">perl-statistics-r</requirement>
+        <requirement type="package" version="3.40">perl-pathtools</requirement>
+        <requirement type="package" version="1.42">perl-scalar-list-utils</requirement>
+        <requirement type="package" version="1.6.924">perl-bioperl</requirement>
+        <requirement type="package" version="2.49">perl-getopt-long</requirement>
+        <requirement type="package" version="3.2.2">r-base</requirement>
+        <requirement type="package" version="0.1.2">r-qqman</requirement>
+        <requirement type="package" version="1.1.2">r-rcolorbrewer</requirement>
+        <requirement type="package" version="1.8.3">r-plyr</requirement>
+        <requirement type="package" version="3.5.0">r-gtools</requirement>
+        <requirement type="package" version="1.4.1">r-reshape2</requirement>
+        <requirement type="package" version="2.1.0">r-ggplot2</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" />
