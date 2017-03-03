@@ -16,8 +16,8 @@
 
 #! /usr/bin/perl
 use IPC::System::Simple qw(system capture);
-use Parallel::ForkManager;
-use File::Copy;
+# use Parallel::ForkManager;
+# use File::Copy;
 use strict;
 use warnings;
 use Getopt::ArgParse;
@@ -67,6 +67,12 @@ $ap->add_arg(
 	required => 1,
 	help => 'String for genome version for genome and annotation files in genomes/ folder');
 $ap->add_arg(
+	'--output',
+	'-o',
+	dest => 'output',
+	required => 1,
+	help => 'output');
+$ap->add_arg(
 	'--threads',
 	'-t',
 	default => 30,
@@ -75,18 +81,18 @@ $ap->add_arg(
 my $args = $ap->parse_args();
 
 my $fastagenomeversion=sprintf("genomes/genome_%s.fa", $args->genome);
-unless (-r -e -f $fastagenomeversion){
-	die "\nERROR : Please check if a genome fasta file exists in genomes\/folder for <genome_version>\n"
-}
+# unless (-r -e -f $fastagenomeversion){
+# 	die "\nERROR : Please check if a genome fasta file exists in genomes\/folder for <genome_version>\n"
+# }
 
-unless ($args->hotspot>0){
-	die "\nERROR : Please specify a natural number >0 for <hotspot_window_length>\n";
-}
+# unless ($args->hotspot>0){
+# 	die "\nERROR : Please specify a natural number >0 for <hotspot_window_length>\n";
+# }
 
-unless (-r -e -f $args->input_table){
-	die sprintf("\nERROR: %s not exists or is not readable or not properly formatted. Please check file.\n\n",
-		$args->input_table);
-}
+# unless (-r -e -f $args->input_table){
+# 	die sprintf("\nERROR: %s not exists or is not readable or not properly formatted. Please check file.\n\n",
+# 		$args->input_table);
+# }
 
 @starttime=localtime; #time characters for analysis folder name
 
@@ -107,44 +113,50 @@ $profile= $args->chr_length; #chromosome profile <chromosome_length_profile>
 $hotspot= $args->hotspot; #natural number for hotspot window <hotspot_window_length> 
 $genome = $args->genome; #genome version as in genomes/genome_<genome_version>.fa and genomes/refseq_<genome_version>.txt
 
-## creating output directories
-mkdir("results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]", 0755) || die "Cannot create results folder - check if it already exists";
-mkdir("results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/samples-$inputtable", 0755) || die "Cannot create results folder- check if it already exists";
+open (BASECHANGE, ">results.txt");
+print BASECHANGE "teste\n";
+print BASECHANGE "teste1\n";
 
-## woland-anno.pl multi-threading
-$pm = Parallel::ForkManager->new($args->threads);
+close (BASECHANGE);
 
-for my $i (0..$#sample){ #execution of woland-anno.pl for each sample
-	my @arguments;
-	push (@arguments, "-i");
-	push (@arguments, $sample[$i]);
-	push (@arguments, "-c");
-	push (@arguments, $profile);
-	push (@arguments, "-w");
-	push (@arguments, $hotspot);
-	push (@arguments, "-g");
-	push (@arguments, $genome);
+# ## creating output directories
+# mkdir("results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]", 0755) || die "Cannot create results folder - check if it already exists";
+# mkdir("results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/samples-$inputtable", 0755) || die "Cannot create results folder- check if it already exists";
 
-	my $pid=$pm->start and next;
-	system ($^X, "woland-anno.pl", @arguments);
-	$pm->finish;
-}
-$pm->wait_all_children; #wait woland-anno.pl
+# ## woland-anno.pl multi-threading
+# $pm = Parallel::ForkManager->new($args->threads);
 
-## woland-report.pl
-system ($^X, "woland-report.pl", "-i", $args->input_table);
+# for my $i (0..$#sample){ #execution of woland-anno.pl for each sample
+# 	my @arguments;
+# 	push (@arguments, "-i");
+# 	push (@arguments, $sample[$i]);
+# 	push (@arguments, "-c");
+# 	push (@arguments, $profile);
+# 	push (@arguments, "-w");
+# 	push (@arguments, $hotspot);
+# 	push (@arguments, "-g");
+# 	push (@arguments, $genome);
 
-## moving report folder and files to results-batch
-move ("report-$inputtable", "results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/report-$inputtable");
+# 	my $pid=$pm->start and next;
+# 	system ($^X, "woland-anno.pl", @arguments);
+# 	$pm->finish;
+# }
+# $pm->wait_all_children; #wait woland-anno.pl
 
-## moving each result sample folder and files to results-batch/results
-for my $i (0..$#tablearray){
-	move ("results-$sample[$i]", "results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/samples-$inputtable/results-$sample[$i]");
-}
+# ## woland-report.pl
+# system ($^X, "woland-report.pl", "-i", $args->input_table);
 
-@endtime=localtime;
+# ## moving report folder and files to results-batch
+# move ("report-$inputtable", "results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/report-$inputtable");
 
-print "Start Time: @starttime\n";
-print "End Time: @endtime\n";
+# ## moving each result sample folder and files to results-batch/results
+# for my $i (0..$#tablearray){
+# 	move ("results-$sample[$i]", "results-batch-$inputtable-$starttime[0].$starttime[1].$starttime[2].$starttime[3].$starttime[4].$starttime[5]/samples-$inputtable/results-$sample[$i]");
+# }
+
+# @endtime=localtime;
+
+# print "Start Time: @starttime\n";
+# print "End Time: @endtime\n";
 
 exit;
