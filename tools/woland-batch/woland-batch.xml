@@ -19,12 +19,23 @@
         <requirement type="package" version="1.8.3">r-plyr</requirement>
         <requirement type="package" version="3.5.0">r-gtools</requirement>
         <requirement type="package" version="1.4.1">r-reshape2</requirement>
-        <requirement type="package" version="2.1.0">r-ggplot2</requirement> 
+        <requirement type="package" version="2.1.0">r-ggplot2</requirement>
+        <requirement type="package" version="2.3.0">bowtie2</requirement>
     </requirements>
     <stdio>
         <exit_code range="1:" />
     </stdio>
     <command><![CDATA[
+        ## prepare bowtie2 index
+        #set index_path = ''
+        #if str($reference_genome.source) == "history":
+            bowtie2-build --threads \${GALAXY_SLOTS:-4} '$reference_genome.own_file' genome &&
+            ln -s -f '$reference_genome.own_file' genome.fa &&
+            #set index_path = 'genome'
+        #else:
+            #set index_path = $reference_genome.index.fields.path
+        #end if
+
         python '${__tool_directory__}/woland-batch.py' 
         -i "$input_table"
         -d "${html_file.files_path}"
@@ -33,21 +44,46 @@
         -c "$chromosome_profile"
         -p "$chromosome_profile.name"
         -w "$hotspot_window"
-        -g "$genome_version"
-        
+        -g "$index_path"
+
     ]]></command>
     <inputs>
         <param type="data" name="input_table" format="txt" label="Input table" help="Tab-delimited file with samples in the 1st column and groups in the 2nd column."/>
         <param type="data" name="chromosome_profile" format="txt" label="Chromosome Length Profile" help="Tab-delimited file with chr names in the 1st column and target sequenced length in the 2nd column."/>
         <param type="integer" name="hotspot_window" label="Hotspot Window Length" value="1000" min="1" help="Natural number for hotspot window-length"/>
+
+        <conditional name="reference_genome">
+          <param name="source" type="select" label="Will you select a reference genome from your history or use a built-in index?" help="Built-ins were indexed using default options. See Indexes section of help below">
+            <option value="indexed">Use a built-in genome index</option>
+            <option value="history">Use a genome from the history and build index</option>
+          </param>
+          <when value="indexed">
+            <param name="index" type="select" label="Select reference genome" help="If your genome of interest is not listed, contact the Galaxy team">
+              <options from_data_table="bowtie2_indexes">
+                <filter type="sort_by" column="2"/>
+                <validator type="no_options" message="No indexes are available for the selected input dataset"/>
+              </options>
+            </param>
+          </when>
+          <when value="history">
+            <param name="own_file" type="data" format="fasta" label="Select reference genome" />
+          </when>
+        </conditional>
+
         <param type="text" name="genome_version" label="Genome Version" help="String for genome version for genome and annotation files."/>
+
+        <!-- TODO:
+        ADD REFSEQ INPUT OPTION
+         -->
     </inputs>
     <outputs>
-        <data format="html" name="html_file" label="${tool.name} on ${on_string}: Report" />
+        <data format="html" name="html_file" label="${tool.name} on ${on_string}: report" />
         <!-- <data format="txt" name="text_file"  label="${tool.name} on ${on_string}: RawData" /> -->
     </outputs>
     <tests>
         <test>
+            <param name="source" value="history" />
+            <param name="own_file" value="genomes/genome_ecolik12.fa" />
             <param name="input_table" value="input-table-ecoli_6groups.txt"/>
             <param name="chromosome_profile" value="chromosomeprofile-ecolik12_MG1655.txt"/>
             <param name="hotspot_window" value="1000"/>

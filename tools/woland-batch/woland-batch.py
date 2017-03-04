@@ -61,7 +61,9 @@ class WolandBatchRunner(object):
             '-w',
             self.opts.hotspotwindow,
             '-g',
-            self.opts.genomeversion,
+            self.opts.genomepath,
+            '-n',
+            self.opts.genomename,
             '-o',
             self.opts.outputdir]
 
@@ -127,7 +129,8 @@ if __name__ == '__main__':
     op.add_option('-c', '--chrprofile', default=None)
     op.add_option('-p', '--chrprofilename', default=None)
     op.add_option('-w', '--hotspotwindow', default=1000)
-    op.add_option('-g', '--genomeversion', default=None)
+    op.add_option('-g', '--genomepath', default=None)
+    op.add_option('-x', '--genomename', default="genome")
     op.add_option('-d', '--outputdir', default="/tmp/shortread")
     op.add_option('-n', '--namejob', default='woland-batch')
     op.add_option('-e', '--executable', default='woland-batch.pl')
@@ -135,10 +138,15 @@ if __name__ == '__main__':
 
     assert opts.inputtable is not None
     assert opts.inputtablename is not None
+    assert opts.chrprofile is not None
+    assert opts.chrprofilename is not None
+    assert opts.genomepath is not None
     assert opts.htmloutput is not None
 
     if not os.path.exists(opts.outputdir):
         os.makedirs(opts.outputdir)
+
+    opts.genomename = opts.genomepath.rsplit('/', 1)[-1]
 
     woland_runner = WolandBatchRunner(opts)
     woland_runner.run_woland_batch()
