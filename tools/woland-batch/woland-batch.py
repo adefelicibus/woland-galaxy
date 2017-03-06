@@ -45,10 +45,12 @@ class WolandBatchRunner(object):
 
         intname = self.opts.inputtablename
         incname = self.opts.chrprofilename
+        # inrname = self.opts.refseqfilename
 
         # Replace unwanted or problematic charaters in the input file name
         self.inputtableinfilename = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', os.path.basename(intname))
         self.inputchinfilename = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', os.path.basename(incname))
+        # self.inputrefseqinfilename = re.sub(r'[^a-zA-Z0-9_\-\.]', '_', os.path.basename(inrname))
 
         # Build the Commandline from the given parameters
         command_line = [
@@ -64,6 +66,8 @@ class WolandBatchRunner(object):
             self.opts.genomepath,
             '-n',
             self.opts.genomename,
+            '-r',
+            self.opts.refseqfile,
             '-o',
             self.opts.outputdir]
 
@@ -128,6 +132,8 @@ if __name__ == '__main__':
     op.add_option('-o', '--htmloutput', default=None)
     op.add_option('-c', '--chrprofile', default=None)
     op.add_option('-p', '--chrprofilename', default=None)
+    op.add_option('-r', '--refseqfile', default=None)
+    op.add_option('-f', '--refseqfilename', default=None)
     op.add_option('-w', '--hotspotwindow', default=1000)
     op.add_option('-g', '--genomepath', default=None)
     op.add_option('-x', '--genomename', default="genome")

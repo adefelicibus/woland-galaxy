@@ -43,6 +43,8 @@
         -j "$input_table.name"
         -c "$chromosome_profile"
         -p "$chromosome_profile.name"
+        -r "$refseq"
+        -f "$refseq.name"
         -w "$hotspot_window"
         -g "$index_path"
 
@@ -71,10 +73,8 @@
         </conditional>
 
         <param type="text" name="genome_version" label="Genome Version" help="String for genome version for genome and annotation files."/>
+        <param type="data" name="refseq" format="txt" label="RefSeq" help=""/>
 
-        <!-- TODO:
-        ADD REFSEQ INPUT OPTION
-         -->
     </inputs>
     <outputs>
         <data format="html" name="html_file" label="${tool.name} on ${on_string}: report" />
@@ -85,7 +85,8 @@
             <param name="source" value="history" />
             <param name="own_file" value="genomes/genome_ecolik12.fa" />
             <param name="input_table" value="input-table-ecoli_6groups.txt"/>
-            <param name="chromosome_profile" value="chromosomeprofile-ecolik12_MG1655.txt"/>
+            <param name="refseq" value="genomes/refseq_ecolik12.txt"/>
+            <param name="chromosome_profile" value="profiles/chromosomeprofile-ecolik12_MG1655.txt"/>
             <param name="hotspot_window" value="1000"/>
             <param name="genome_version" value="ecolik12"/>
             <output name="html_file" file="woland_batch.html" ftype="html"/>
